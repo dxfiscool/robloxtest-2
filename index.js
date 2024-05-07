@@ -5,6 +5,8 @@ const mongodb = require('mongodb')
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser');
+const crypto = require('crypto')
+const fs = require('fs')
 
 // App
 const app = express();
@@ -15,6 +17,8 @@ const port = 80;
 const MongoClient = mongodb.MongoClient
 const url = 'mongodb://localhost:27017/roblox'
 const dbName = 'roblox'
+
+const privateKey = fs.readFileSync(path.join(__dirname, 'keys', 'PrivateKey.pem'), 'utf8')
 
 app.use('/static', express.static('public'));
 app.use('/css', express.static('css'));
@@ -71,6 +75,7 @@ app.get('/GetAllowedSecurityVersions', (req, res) => {
 })
 
 app.get('/Game/Join.ashx', (req, res) => {
+  // TODO: Update the stuff in here
   let joinscript = {
       ClientPort: 0,
       MachineAddress: '127.0.0.1',
@@ -79,15 +84,15 @@ app.get('/Game/Join.ashx', (req, res) => {
       PingInterval: 120,
       UserName: 'Player',
       SeleniumTestMode: false,
-      UserId: 0,
+      UserId: 1,
       SuperSafeChat: true,
-      CharacterAppearance: 'https://api.roblox.com/v1.1/avatar-fetch/?placeId=0&userId=0',
-      ClientTicket: '11/27/2016 9:55:58 AM;jg04OiujU7lnnZD0dLHI+Yu1zIorkPjhw94F1UZZTzos2vgj2qkDGuEmtNrDc/4CuL/Dmq5EPrJMaeyygqwUPyRpTavnN00pBQ/G+vYx6kce1hkEQHrYAuho1yKeq0gGVsDvloSuM/02ugH2zyEpf+fnMthIuk2LRcNRCYc4AaU=;MasBQ3GMHE4BIyflKr6kpE69YaT7AnmDoezxUFPn4lctSpqCUMOrsA41IfGzL2yWz8DKRc646P9/mi5rTP1Psc/+rIJNezIH4DU3eUZwReGVzQZ/nZgNI4GoumNMlv6qyA1oSmhvxE6UEWVM12cvSx3tJQI3yDIVqNrbJhNSexo=',
+      CharacterAppearance: '',
+      ClientTicket: '',
       GameId: '00000000-0000-0000-0000-000000000000',
       PlaceId: 0,
       MeasurementUrl: '',
       WaitingForCharacterGuid: '08d7557b-2843-4a03-82f7-2723e47e2371',
-      BaseUrl: 'http://assetgame.roblox.com/',
+      BaseUrl: 'http://infra.robloxlabs.com',
       ChatStyle: 'Classic',
       VendorId: 0,
       ScreenShotInfo: '',
@@ -110,7 +115,19 @@ app.get('/Game/Join.ashx', (req, res) => {
       FollowUserId: 0,
       characterAppearanceId: 0
   }
-  res.json(joinscript)
+  const string = JSON.stringify(joinscript)
+  const hash = crypto.createHash('sha1').update(string, 'utf8').digest('hex')
+
+  const signed = crypto.sign('RSA-SHA1', Buffer.from(hash, 'hex'), {
+    key: privateKey,
+    padding: crypto.constants.RSA_PKCS1_PADDING,
+  })
+  console.log(signed.toString('base64'))
+  const sig = signed.toString('base64')
+  const rbxsig = "--rbxsig%" + sig + "%" + 'r\n' + string
+
+  res.set('Content-Type', 'text/plain');
+  res.send(rbxsig)
 })
 
 // API's
