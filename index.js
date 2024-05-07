@@ -124,7 +124,7 @@ app.get('/Game/Join.ashx', (req, res) => {
   })
   console.log(signed.toString('base64'))
   const sig = signed.toString('base64')
-  const rbxsig = "--rbxsig%a" + sig + "%" + 'r\n' + string
+  const rbxsig = "--rbxsig%" + sig + "%" + 'r\n' + string
 
   res.set('Content-Type', 'text/plain');
   res.send(rbxsig)
