@@ -12,6 +12,16 @@ const fs = require('fs')
 const app = express();
 app.use(cookieParser())
 
+// middleware for logging requests
+app.use(function(req, res, next) {
+  const timeNow = Date.now()
+  res.on('finish', () => {
+    const timeTaken = Date.now() - timeNow
+    console.log(`[${req.method}] - ${req.originalUrl} - ${res.statusCode} - ${timeTaken}ms`)
+  })
+  next()
+})
+
 // Variables
 const port = 80;
 const MongoClient = mongodb.MongoClient
@@ -122,7 +132,6 @@ app.get('/Game/Join.ashx', (req, res) => {
     key: privateKey,
     padding: crypto.constants.RSA_PKCS1_PADDING,
   })
-  console.log(signed.toString('base64'))
   const sig = signed.toString('base64')
   const rbxsig = "--rbxsig%" + sig + "%" + 'r\n' + string
 
@@ -134,7 +143,6 @@ app.get('/Game/Join.ashx', (req, res) => {
 
 app.get('/v1/authorized', (req, res) => {
   let robloSecurity = req.cookies['.ROBLOSECURITY']
-  console.log(robloSecurity)
   if (robloSecurity) {
     const user = decryptJWT(robloSecurity)
     res.status(200).json({username: user.username, userID: user.userId})
