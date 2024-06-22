@@ -10,9 +10,18 @@
   "license": "ISC",
   "dependencies": {
     "argon2": "^0.40.1",
+    "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
     "express": "^4.19.2",
+    "fast-xml-parser": "^4.3.6",
+    "is-valid-hostname": "^1.0.2",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.6.1"
+    "mongodb": "^6.6.1",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1",
+    "string-format": "^2.0.0",
+    "uuid": "^9.0.1",
+    "xml-formatter": "^3.6.2"
   }
 }

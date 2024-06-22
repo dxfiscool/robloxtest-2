@@ -1,0 +1,50 @@
+body, html {
+    height: 100%;
+    background-color: dark;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+
+.card_signup {
+    width: 30rem;
+    min-height: 30rem;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.card_login {
+    width: 30rem;
+    min-height: 30rem;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+
+.signup_btn {
+    width: 25rem;
+    height: 2.5rem;
+}
+
+.login_btn {
+    width: 25rem;
+    height: 2.5rem;
+}
+
+.uploadBtn {
+    width: 25rem;
+    height: 2.5rem;
+}

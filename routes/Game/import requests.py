@@ -1,0 +1,52 @@
+import requests
+import json
+
+# The expected JSON response
+expected_response = {
+    "redirectUrl": "https://www.roblox.com:443/premium/membership",
+    "selectedProduct": None,
+    "loggedIn": False,
+    "currentCredit": 0.0,
+    "paymentMethodsVisibility": None,
+    "isStarcodeV2Enabled": False,
+    "allowCreditForRenewingPurchases": False,
+    "isBedev2FlowEnabled": False
+}
+
+# Convert the expected response to a string for comparison
+expected_response_str = json.dumps(expected_response)
+
+# Headers from the curl command
+headers = {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "accept-language": "en-US,en;q=0.9",
+    "cache-control": "max-age=0",
+    "cookie": "GuestData=UserID=-1288575673; _ga_9HRYHVCY79=GS1.1.1715706126.1.0.1715706131.0.0.0; _ga_86XJ75NX49=GS1.2.1715758361.1.0.1715758361.0.0.0; _ga_Q5KX6WYXCK=GS1.1.1715758361.1.0.1715758365.0.0.0; .RBXIDCHECK=9f47ee17-d717-4d2b-ba7d-4674d25b46d7,a4b31fcc-c669-498d-8495-72d0615cf453,7730ff23-9654-4bd8-b53d-3ffa35fc1101; rbxas=2084524fcc841f03cf769cbcad4a8c86d965cdad08a9dcb330967c13a339b0f0; _gid=GA1.2.955320449.1717078221; _ga=GA1.1.1274954965.1715378084; _t=BKv0eGZbbxuKfnfeimUEJT6PWPhZcbymctkJwcnar0Fc%2FW%2Fg3KR5FOa5FyR4zMynNZHaFV%2BJvrGDOyTDVHJHUtnvKpuppFtZ8jnSMbouRgzoLRfvFAKNhxqT8al4S9EsH05OW8VCKXF31uW2uu99PI4tjdJfxhGIkJ7XcbNpYpEdtjtcEaLcWZR6uB%2FZQFTyI9YSBTnGdXMjsi7j0yZti9d4LzF7UdwDc56sMvEA4lMcAblPZelfwR9d38%2FiEvspzrCA3KqMOpEtWhsINrWAcfXVIjk%3D--PUNqW8x%2BBmQjQQsC--ObN3DjTvNgBo%2F2BYO0Le1Q%3D%3D; UnifiedLoggerSession=CreatorHub%3D%7B%22sessionId%22%3A%22f5bdc325-e184-475c-b770-e13d25757e8f%22%2C%22lastActivity%22%3A1717092480066%7D; _ga_BK4ZY0C59K=GS1.1.1717092450.25.1.1717093405.0.0.0; rbx-ip2=; RBXSessionTracker=sessionid=1b09e9cf-d56e-46e7-8b5b-75c4921ee906; .ROBLOSECURITY=_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_67703FCB39D7EBB3D488D55D81C01EF03C338F3B130D4E55EA6ADAA493FEB89D2CE789FF94BC0CBE511FD33FBD194FBD23BF4A738F9681727BBDE8AC2EC81C1BC45192000005D8B50F44F3425488427A641E2511221E740FB64E69180E4D0ADFFEE5263239EE6FDEDCCCD61114DFEAEEDF14F8577E0854C3F359DDF1A935F467ADFF7D5CF51C96A60012BCD27157A24612112681CBF1C64C8FEB203BD109FFAA7A3248EF43176F7F569E6FDC292D8BB8612E655111E7844943321C27E4775DAA4DA4E98BAAF7CA8880865912A6975C5523173164799C8A7F1EC1D49C5879D3DCE7BBF9528567B66A9D27947482B6CF2ECB455761A865D116FB12E811935C638861FE99C26CA355CB790B6EA3B3D2960F08FA5FBE075448698A7C3E05C95ED6AC90176EB95E1F08248AAF10F72CF09CBAFED05594E80BC5237F50A2BA9D6F708599AA8BCAC2068ECFA624571C0E04BC92F015A066A7848A178D9F2B79A9915724D3EE758F516F66C6890A9F289375833126E54A1D23CA6B30A039A856C21ADB83712DB50A1A1576887465BC50325DF6A4D0301B5A608FEDB0841B58A917E53F934EA95D27FABB80E2871CFDC160AA7C272A220C46C4BDC97EC3E99D7DC3C4E1C89C836BEFD0B4AC8773221074F4796B22EC57DE99891AA4C77F5A47807D92386127609C43350C7BCEDA10799724DA71EB733E7D2BA578A5F31EBE2EEA5B92E8CA6CCB0D52C8C2679DFB43039DFAF208A1DBF61023E548FF634730F83471DE1BB3ACF903A98A050E87E3D929529FFA1D8957BD4885AE900511B3BDDE86FAA61ABFEAFE57DE6107D371F87B0E30F2C41C0102E003484D1C3B52091CECC575668F7A4205661C608B33FB63DB7750C06185DFBFE564DB4225E2833C04B076A1777468EC4C12717613FF2A985936635ECEF4477A86446AB3AB5633EFF7147B91082573016B1EC852A9F2C462FBED30458F5F30F57D75E7AC72B552A07DEEE88D38C2E258EEEACA59424CF881B62B332343682E7CA91A5DEA922550B8BCBE0FA02AFD8A06EA52974641F784F1A90A26246DE99C384229D0CF4EB5803C7803309D377175804A90047E698FA39A6128E9B6E6B8F67711DADC; RBXEventTrackerV2=CreateDate=5/6/2024 2:49:17 PM&rbxid=1241077792&browserid=1715023394590007; RBXPaymentsFlowContext=3cf47c25-60a5-4b5d-b1a6-7d6bd5e24f02,WebRobuxPurchase",
+    "priority": "u=0, i",
+    "sec-ch-ua": "\"Not-A.Brand\";v=\"99\", \"Chromium\";v=\"124\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "none",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": "1",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+}
+
+# Loop through ap values from 1 to 10,000
+for ap in range(1, 10001):
+    # Construct the URL with the current ap value
+    url = f"https://billing.roblox.com/v1/paymentmethods?ap={ap}"
+    
+    # Make the HTTP GET request with headers
+    response = requests.get(url, headers=headers)
+    
+    # Convert the response JSON to a string for comparison
+    response_str = json.dumps(response.json())
+    # Check if the response differs from the expected response
+    if response_str != expected_response_str:
+        # Print the ap value that gave a different response
+        print(f"Different response for ap={ap}: {response_str}")
+
+print("DONE")
